@@ -6,10 +6,11 @@
 # --- Librerías
 library(terra)
 
-# --- Primeros pasos
 
 
 # --- Bandas Sentinel 2 L2A --- #
+
+
 
 
 # Asigna la ruta de las bandas
@@ -34,7 +35,11 @@ names(apilado) <- basename(bandas)
 plot(apilado[[5]], main = names(apilado)[5])
 
 
+
+
 # --- DEM --- #
+
+
 
 
 # Asignar ruta
@@ -47,7 +52,11 @@ DEM <- rast(ruta_dem)
 plot(DEM, main = names(DEM))
 
 
+
+
 # --- Comprobando valores --- #
+
+
 
 
 apilado
@@ -68,10 +77,14 @@ apilado_rec <- crop(apilado_rep, DEM)
 plot(apilado_rec)
 
 
+
+
 # --- Resampleo --- # 
 
 
-# Resamplear DEM a 20m  
+
+
+# Resampleando DEM a 20m  
 DEM_20 <- resample(DEM, apilado_rec, method = "bilinear")
 plot(DEM_20)
 
@@ -90,7 +103,37 @@ datos <- df_datos[, !names(df_datos) %in% c("X", "Y")]
 datos_std <- scale(datos)
 
 
+# --- Calculo de Indices de Vegetacion --- #
+
+# Asignacion de bandas 
+
+blue <- apilado_rec[["B02"]] #Blue
+green <- apilado_rec[["B03"]] #Green
+red <- apilado_rec[["B04"]] #Red
+vredg1 <- apilado_rec[["B05"]] #VegRedEdge 20m
+vredg2 <- apilado_rec[["B06"]] #VegRedEdge 20m
+vredg3 <- apilado_rec[["B07"]] #VegRedEdge 20m
+nir <- apilado_rec[["B08"]] #NIR
+swir1 <- apilado_rec[["B11"]] #SWIR
+swir2 <- apilado_rec[["B12"]] #SWIR
+
+# NDVI
+ndvi <- (nir - red) / (nir + red)
+
+# EVI2
+
+# GNDVI
+
+# GRVI
+
+# GDI
+
+# GRDI
+
+
 # --- Aplicar clasificacion no supervisada (k-means) --- #
+
+
 
 
 kmeans_res <- kmeans(datos_std, centers = 6, iter.max = 10, nstart = 1)
